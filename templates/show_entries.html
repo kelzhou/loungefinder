@@ -1,0 +1,116 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="page left-col">
+  <h2>Lounge Status</h2>
+  <div class="lounges">
+    <center>
+    <h5><i class="fa fa-thumbs-up fa-lg"/></i> Free 
+    <i class="fa fa-thumbs-down fa-lg"/></i> Taken
+    <i class="fa fa-question fa-lg"/></i> Don't Know</h5>
+    </center>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Floor</th>
+          <th>Harnwell</th>
+          <th>Harrison</th>
+          <th>Rodin</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for x, y, z in lounges %}
+        <tr>
+          <td>{{x['floor']}}</td>
+          <td>
+            {% if x['free'] == 0 %}
+            <i class="fa fa-thumbs-down fa-lg"/></i>
+            {% elif x['free'] == 1 %}
+            <!-- <span class="glyphicon glyphicon-thumbs-up"></span> -->
+            <i class="fa fa-thumbs-up fa-lg"/></i>
+            {% elif x['free'] == 2 %}
+            <i class="fa fa-question fa-lg"/></i>
+            {% endif %}
+          </td>
+          <td>
+            {% if y['free'] == 0 %}
+            <i class="fa fa-thumbs-down fa-lg"/></i>
+            {% elif y['free'] == 1 %}
+            <i class="fa fa-thumbs-up fa-lg"/></i>
+            {% elif y['free'] == 2 %}
+            <i class="fa fa-question fa-lg"/></i>
+            {% endif %}
+          </td>
+          <td>
+            {% if z['free'] == 0 %}
+            <i class="fa fa-thumbs-down fa-lg"/></i>
+            {% elif z['free'] == 1 %}
+            <i class="fa fa-thumbs-up fa-lg"/></i>
+            {% elif z['free'] == 2 %}
+            <i class="fa fa-question fa-lg"/></i>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  </div>
+
+
+  <div class="page right-col">
+  <h3> Update Lounges: </h3>
+  {% for message in get_flashed_messages() %}
+    <div class="flash alert alert-info">{{ message }}</div>
+  {% endfor %}
+    <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
+      <dl>
+        <dt>Building:
+        <dd>
+          <select class="form-control" name=building style="height: 25px;">
+          <option></option>
+          <option value=Harnwell>Harnwell</option>
+          <option value=Harrison>Harrison</option>
+          <option value=Rodin>Rodin</option>
+          </select>
+        <dt>Floor:
+        <dd>
+          <select class="form-control" name=floor style="height: 25px;">
+          <option value=""></option>
+          <option value=1>1</option>
+          <option value=2>2</option>
+          <option value=3>3</option>
+          <option value=4>4</option>
+          <option value=5>5</option>
+          <option value=6>6</option>
+          <option value=7>7</option>
+          <option value=8>8</option>
+          <option value=9>9</option>
+          <option value=10>10</option>
+          <option value=11>11</option>
+          <option value=12>12</option>
+          <option value=13>13</option>
+          <option value=14>14</option>
+          <option value=15>15</option>
+          <option value=16>16</option>
+          <option value=17>17</option>
+          <option value=18>18</option>
+          <option value=19>19</option>
+          <option value=20>20</option>
+          <option value=21>21</option>
+          <option value=22>22</option>
+          <option value=23>23</option>
+          <option value=24>24</option>
+          </select>
+        <dt>Status:
+        <dd>
+          <select class="form-control" name=free style="height: 25px;">
+          <option></option>
+          <option value=1>Open</option>
+          <option value=0>Taken</option>
+          <option value=2>Don't Know</option>
+          </select>
+        <dd><br/><input class="form-control btn btn-primary" type=submit value=Update>
+      </dl>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="page left-col">
+	{{ entries }}
+	{{ harrison }}
+</div>
+
+
+  <div class="page right-col">
+  <h3> Reserve Lounges: </h3>
+  {% for message in get_flashed_messages() %}
+    <div class="flash alert alert-info">{{ message }}</div>
+  {% endfor %}
+    <form action="{{ url_for('add_reserve') }}" method=post class=add-reserve>
+      <dl>
+        <dt>Building:
+        <dd>
+          <select class="form-control" name=building>
+          <option></option>
+          <option value=Harnwell>Harnwell</option>
+          <option value=Harrison>Harrison</option>
+          <option value=Rodin>Rodin</option>
+          </select>
+          <!-- <input class="form-control" type=text size=30 name=building> -->
+        <dt>Floor:
+        <dd>
+          <!-- <input class="form-control" name=floor type=text size=30> -->
+          <select class="form-control" name=floor>
+          <option value=""></option>
+          <option value=1>1</option>
+          <option value=2>2</option>
+          <option value=3>3</option>
+          <option value=4>4</option>
+          <option value=5>5</option>
+          <option value=6>6</option>
+          <option value=7>7</option>
+          <option value=8>8</option>
+          <option value=9>9</option>
+          <option value=10>10</option>
+          <option value=11>11</option>
+          <option value=12>12</option>
+          <option value=13>13</option>
+          <option value=14>14</option>
+          <option value=15>15</option>
+          <option value=16>16</option>
+          <option value=17>17</option>
+          <option value=18>18</option>
+          <option value=19>19</option>
+          <option value=20>20</option>
+          <option value=21>21</option>
+          <option value=22>22</option>
+          <option value=23>23</option>
+          <option value=24>24</option>
+          </select>
+        <dt>Reservation Start Time:
+        <dd>
+          <input name=start type=text size=30>
+          <!-- <select class="form-control" name=free>
+          <option></option>
+          <option value=1>Open</option>
+          <option value=0>Taken</option>
+          <option value=2>Don't Know</option>
+          </select> -->
+        <dt>Reservation End Time:
+        <dd>
+          <input name=end type=text size=30>
+        <dd><br/><input class="form-control btn btn-primary" type=submit value=Submit>
+      </dl>
+    </form>
+
+    <div class="well">
+  <div id="datetimepicker4" class="input-append">
+    <input data-format="yyyy-MM-dd" type="text"></input>
+    <span class="add-on">
+      <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+      </i>
+    </span>
+  </div>
+</div>
+
+</div>
+
+
+{% endblock %} 

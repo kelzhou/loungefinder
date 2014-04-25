@@ -1,0 +1,179 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="page left-col">
+	<!-- {{ entries }} -->
+	<br>
+	<h3> Harnwell Reservations:</h3>
+	<!-- {{ harnwell }} -->
+	<table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Floor</th>
+          <th>Reserved Start Time</th>
+          <th>Reserved End Time</th>
+        </tr>
+      </thead>
+      <tbody class="reservation-table">
+        {% for x in harnwell %}
+        <tr>
+          <td>{{x['floor']}}</td>
+          <td>{{x['start']}}</td>
+          <td>{{x['end']}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+	<br>
+
+	<h3> Harrison Reservations:</h3>
+	<!-- {{ harrison }} -->
+	<table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Floor</th>
+          <th>Reserved Start Time</th>
+          <th>Reserved End Time</th>
+        </tr>
+      </thead>
+      <tbody class="reservation-table">
+        {% for x in harrison %}
+        <tr>
+          <td>{{x['floor']}}</td>
+          <td>{{x['start']}}</td>
+          <td>{{x['end']}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+	<br>
+
+	<h3> Rodin Reservations:</h3>
+	<!-- {{ rodin }} -->
+	<table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Floor</th>
+          <th>Reserved Start Time</th>
+          <th>Reserved End Time</th>
+        </tr>
+      </thead>
+      <tbody class="reservation-table">
+        {% for x in rodin %}
+        <tr>
+          <td>{{x['floor']}}</td>
+          <td>{{x['start']}}</td>
+          <td>{{x['end']}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
+
+<div class="page right-col">
+
+  	<h3> Reserve Lounges: </h3>
+  {% for message in get_flashed_messages() %}
+    <div class="flash alert alert-info">{{ message }}</div>
+  {% endfor %}
+    <form action="{{ url_for('add_reserve') }}" method=post class=add-reserve>
+      <dl>
+        <dt>Building:
+        <dd>
+          <select class="form-control" name=building style="height: 25px;">
+          <option></option>
+          <option value=Harnwell>Harnwell</option>
+          <option value=Harrison>Harrison</option>
+          <option value=Rodin>Rodin</option>
+          </select>
+        <dt>Floor:
+        <dd>
+          <select class="form-control" name=floor style="height: 25px;">
+          <option value=""></option>
+          <option value=1>1</option>
+          <option value=2>2</option>
+          <option value=3>3</option>
+          <option value=4>4</option>
+          <option value=5>5</option>
+          <option value=6>6</option>
+          <option value=7>7</option>
+          <option value=8>8</option>
+          <option value=9>9</option>
+          <option value=10>10</option>
+          <option value=11>11</option>
+          <option value=12>12</option>
+          <option value=13>13</option>
+          <option value=14>14</option>
+          <option value=15>15</option>
+          <option value=16>16</option>
+          <option value=17>17</option>
+          <option value=18>18</option>
+          <option value=19>19</option>
+          <option value=20>20</option>
+          <option value=21>21</option>
+          <option value=22>22</option>
+          <option value=23>23</option>
+          <option value=24>24</option>
+          </select>
+        <dt>Reservation Start Time:</dt>
+        <dd>
+        <div id="datetimepicker" class="input-append date">
+    <input data-format="MM/dd/yyyy" data-autoclose="true" type="text" name="startdate" style="height: 23px;"></input>
+    <span class="add-on" style="height: 23px;">
+      <i data-time-icon="icon-time" data-date-icon="icon-calendar" style="height: 23px;">
+      </i>
+    </span>
+  </div>
+  <div id="datetimepicker2" class="input-append date">
+    <input data-format="hh:mm" type="text" name="starttime" style="height: 23px;"></input>
+    <span class="add-on" style="height: 23px;">
+      <i data-time-icon="icon-time" data-date-icon="icon-calendar" style="height: 23px;">
+      </i>
+    </span>
+  </div>
+        <dt>Reservation End Time:</dt>
+        <dd>
+<div id="datetimepicker3" class="input-append date">
+    <input data-format="MM/dd/yyyy" type="text" name="enddate" style="height: 23px;"></input>
+    <span class="add-on" style="height: 23px;">
+      <i data-time-icon="icon-time" data-date-icon="icon-calendar" style="height: 23px;">
+      </i>
+    </span>
+  </div>
+  <div id="datetimepicker4" class="input-append date">
+    <input data-format="hh:mm" type="text" name="endtime" style="height: 23px;"></input>
+    <span class="add-on" style="height: 23px;">
+      <i data-time-icon="icon-time" data-date-icon="icon-calendar" style="height: 23px;">
+      </i>
+    </span>
+  </div>
+        <dd><br/><input class="form-control btn btn-primary" type=submit value=Submit>
+      </dl>
+    </form>
+    
+    <script type="text/javascript"
+     src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js">
+    </script> 
+    <script type="text/javascript"
+     src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js">
+    </script>
+    <script type="text/javascript" src="http://tarruda.github.com/bootstrap-datetimepicker/assets/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript">
+	$('#datetimepicker').datetimepicker({
+		pickTime: false,
+		clearBtn: true
+      });
+      $('#datetimepicker2').datetimepicker({
+      pickDate: false,
+      pickSeconds: false
+      });
+      $('#datetimepicker3').datetimepicker({
+		pickTime: false
+      });
+      $('#datetimepicker4').datetimepicker({
+      pickDate: false,
+      pickSeconds: false
+      });
+    </script>
+</div>
+
+{% endblock %} 
