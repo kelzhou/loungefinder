@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
 <div class="page left-col">
-  <h2>Lounge Status</h2>
+  <h2><i class="fa fa-search fa-lg"/></i> Lounge Status</h2>
   <div class="lounges">
     <center>
     <h5><i class="fa fa-thumbs-up fa-lg"/></i> Free 
@@ -58,13 +58,13 @@
 
 
   <div class="page right-col">
-  <h3> Update Lounges: </h3>
+  <h3><i class="fa fa-rotate-right fa-lg"/></i> Update Lounges: </h3>
   {% for message in get_flashed_messages() %}
     <div class="flash alert alert-info">{{ message }}</div>
   {% endfor %}
     <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
       <dl>
-        <dt>Building:
+        <dt>College House:
         <dd>
           <select class="form-control" name=building style="height: 25px;">
           <option></option>

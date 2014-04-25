@@ -1,9 +1,10 @@
 {% extends "layout.html" %}
 {% block body %}
 <div class="page left-col">
-	<!-- {{ entries }} -->
+	<!-- {{ harrison }} -->
+  <h3><i class="fa fa-calendar fa-lg"/></i> Reservations </h3>
 	<br>
-	<h3> Harnwell Reservations:</h3>
+	<h4> Harnwell</h4>
 	<!-- {{ harnwell }} -->
 	<table class="table table-hover">
       <thead>
@@ -11,6 +12,7 @@
           <th>Floor</th>
           <th>Reserved Start Time</th>
           <th>Reserved End Time</th>
+          <th></th>
         </tr>
       </thead>
       <tbody class="reservation-table">
@@ -19,13 +21,19 @@
           <td>{{x['floor']}}</td>
           <td>{{x['start']}}</td>
           <td>{{x['end']}}</td>
+          <td>
+          <form action="{{ url_for('delete_reserve') }}" method=post class=delete-reserve>
+            <input name="id" type="hidden" value="{{ x['id'] }}">
+            <input class="btn btn-danger btn-mini" type=submit value=x>
+          </form>
+        </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
 	<br>
 
-	<h3> Harrison Reservations:</h3>
+	<h4> Harrison</h4>
 	<!-- {{ harrison }} -->
 	<table class="table table-hover">
       <thead>
@@ -33,6 +41,7 @@
           <th>Floor</th>
           <th>Reserved Start Time</th>
           <th>Reserved End Time</th>
+          <th></th>
         </tr>
       </thead>
       <tbody class="reservation-table">
@@ -41,13 +50,19 @@
           <td>{{x['floor']}}</td>
           <td>{{x['start']}}</td>
           <td>{{x['end']}}</td>
+          <td>
+            <form action="{{ url_for('delete_reserve') }}" method=post class=delete-reserve>
+            <input name="id" type="hidden" value="{{ x['id'] }}">
+            <input class="btn btn-danger btn-mini" type=submit value=x>
+          </form>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
 	<br>
 
-	<h3> Rodin Reservations:</h3>
+	<h4> Rodin</h4>
 	<!-- {{ rodin }} -->
 	<table class="table table-hover">
       <thead>
@@ -55,6 +70,7 @@
           <th>Floor</th>
           <th>Reserved Start Time</th>
           <th>Reserved End Time</th>
+          <th></th>
         </tr>
       </thead>
       <tbody class="reservation-table">
@@ -63,6 +79,12 @@
           <td>{{x['floor']}}</td>
           <td>{{x['start']}}</td>
           <td>{{x['end']}}</td>
+          <td>
+          <form action="{{ url_for('delete_reserve') }}" method=post class=delete-reserve>
+            <input name="id" type="hidden" value="{{ x['id'] }}">
+            <input class="btn btn-danger btn-mini" type=submit value=x>
+          </form>
+        </td>
         </tr>
         {% endfor %}
       </tbody>
@@ -71,13 +93,13 @@
 
 <div class="page right-col">
 
-  	<h3> Reserve Lounges: </h3>
+  	<h3><i class="fa fa-clock-o fa-lg"/></i> Reserve Lounges: </h3>
   {% for message in get_flashed_messages() %}
     <div class="flash alert alert-info">{{ message }}</div>
   {% endfor %}
     <form action="{{ url_for('add_reserve') }}" method=post class=add-reserve>
       <dl>
-        <dt>Building:
+        <dt>College House:
         <dd>
           <select class="form-control" name=building style="height: 25px;">
           <option></option>
