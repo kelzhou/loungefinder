@@ -5,6 +5,8 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
 import json
 import time
+from datetime import datetime
+import pytz
 
 # create our little application :)
 app = Flask(__name__)
@@ -78,14 +80,26 @@ def show_entries():
 		reservations = c.fetchall()
 		if len(reservations):
 			for r in reservations:
-				now = time.localtime()
-				start = time.strptime(r['reserve_start'], dformat)
-				end = time.strptime(r['reserve_end'], dformat)
-				if (now > start and now < end and not(e['free'] == 0)):
+				# now = time.localtime()
+				now = datetime.now(pytz.timezone('America/New_York'))
+				# print now
+
+				# start = time.strptime(r['reserve_start'], dformat)
+				start = datetime.strptime(r['reserve_start'], dformat)
+				start.replace(tzinfo=pytz.timezone('America/New_York'))
+				# print start.date() == now.date()
+				 
+				# end = time.strptime(r['reserve_end'], dformat)
+				end = datetime.strptime(r['reserve_end'], dformat)
+				end.replace(tzinfo=pytz.timezone('America/New_York'))
+
+				if ((now.date() == start.date()) and (now.date() == end.date()) and (now.time() > start.time()) 
+					and (now.time() < end.time()) and not(e['free'] == 0)):
 					db.execute('UPDATE lounges SET free = ? WHERE building = ? and floor = ?',
     					(0, e["building"], e["floor"]))
 					db.commit()	
-				elif not (now > start and now < end) and e['free'] == 0:
+				# figure out logic?
+				elif not (now.time() > start.time() and now.time() < end.time()) and e['free'] == 0:
 					db.execute('UPDATE lounges SET free = ? WHERE building = ? and floor = ?',
     					(2, e["building"], e["floor"]))
 					db.commit()	
