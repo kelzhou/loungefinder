@@ -121,6 +121,7 @@ def reservations():
     	d["start"] = e["reserve_start"]
     	d["end"] = e["reserve_end"]
     	d["id"] = e['id']
+    	d["i"] = e['i']
     	if l['building'] == "Harrison":
     		# s = time.strptime(e['reserve_start'], dformat)
     		# e = time.strptime(e['reserve_end'], dformat)
@@ -160,7 +161,7 @@ def add_reserve():
 @app.route('/deletereserve', methods=['POST'])
 def delete_reserve():
 	db = get_db()
-	db.execute('DELETE FROM reservations WHERE id = ?', (request.form['id'],))
+	db.execute('DELETE FROM reservations WHERE i = ?', (request.form['i'],))
 	db.commit()
 	return redirect(url_for('reservations'))
 
