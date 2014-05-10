@@ -51,9 +51,6 @@ def get_db():
         g.sqlite_db = connect_db()
     return g.sqlite_db
 
-def str2bool(v):
-  return v.lower() in ("yes", "true", "t", "1")
-
 @app.teardown_appcontext
 def close_db(error):
     """Closes the database again at the end of the request."""
@@ -64,6 +61,7 @@ def close_db(error):
 def main():
 	return render_template('main.html')
 
+# helper function to update lounge status
 def update_helper():
     dformat = "%m/%d/%Y %H:%M"
     db = get_db()
@@ -82,7 +80,6 @@ def update_helper():
                 # start = time.strptime(r['reserve_start'], dformat)
                 start = datetime.strptime(r['reserve_start'], dformat)
                 start.replace(tzinfo=pytz.timezone('America/New_York'))
-
                 # end = time.strptime(r['reserve_end'], dformat)
                 end = datetime.strptime(r['reserve_end'], dformat)
                 end.replace(tzinfo=pytz.timezone('America/New_York'))
@@ -114,7 +111,7 @@ def lounges():
 
     update_helper()
 
-    time.sleep(1)
+    # time.sleep(1)
     cur = db.execute('SELECT * FROM lounges ORDER BY floor')
     entries = cur.fetchall()
     for e in entries:
@@ -152,6 +149,9 @@ def reservations():
     	elif l['building'] == "Rodin":
     		rodin.append(d)
 
+    # harnwell = sorted(harnwell, key=lambda k: k['start']) 
+    # harrison = sorted(harrison, key=lambda k: k['start']) 
+    # rodin = sorted(rodin, key=lambda k: k['start']) 
     return render_template('reservations.html', entries=entries, harnwell=harnwell, harrison=harrison, rodin=rodin)
 
 @app.route('/add', methods=['POST'])
