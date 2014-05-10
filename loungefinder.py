@@ -76,20 +76,20 @@ def update_helper():
         if len(reservations):
             unchanged = True
             for r in reservations:
-                # now = datetime.now(pytz.timezone('America/New_York'))
-                now = time.localtime()
+                now = datetime.now(pytz.timezone('America/New_York'))
+                # now = time.localtime()
 
-                start = time.strptime(r['reserve_start'], dformat)
-                # start = datetime.strptime(r['reserve_start'], dformat)
-                # start.replace(tzinfo=pytz.timezone('America/New_York'))
+                # start = time.strptime(r['reserve_start'], dformat)
+                start = datetime.strptime(r['reserve_start'], dformat)
+                start.replace(tzinfo=pytz.timezone('America/New_York'))
 
-                end = time.strptime(r['reserve_end'], dformat)
-                # end = datetime.strptime(r['reserve_end'], dformat)
-                # end.replace(tzinfo=pytz.timezone('America/New_York'))
+                # end = time.strptime(r['reserve_end'], dformat)
+                end = datetime.strptime(r['reserve_end'], dformat)
+                end.replace(tzinfo=pytz.timezone('America/New_York'))
                 
-                # if ((now.date() == start.date()) and (now.date() == end.date()) and (now.time() > start.time()) 
-                #   and (now.time() < end.time())):
-                if now > start and now < end:
+                if ((now.date() == start.date()) and (now.date() == end.date()) and (now.time() > start.time()) 
+                  and (now.time() < end.time())):
+                # if now > start and now < end:
                     if not(e['free'] == 0):
                         db.execute('UPDATE lounges SET free = ? WHERE building = ? and floor = ?',
                         (0, e["building"], e["floor"]))
@@ -126,36 +126,6 @@ def lounges():
 			rodin.append(e)
     return render_template('lounges.html', entries=entries, lounges=zip(harnwell, harrison, rodin))
 
-    # updating based on reservations
-    # for e in entries:
-    #   c = db.execute('SELECT * FROM reservations WHERE id = ?', (e['id'],))
-    #   reservations = c.fetchall()
-    #   if len(reservations):
-    #       for r in reservations:
-    #           now = time.localtime()
-                # now = datetime.now(pytz.timezone('America/New_York'))
-                # print now
-
-                # start = time.strptime(r['reserve_start'], dformat)
-                # start = datetime.strptime(r['reserve_start'], dformat)
-                # start.replace(tzinfo=pytz.timezone('America/New_York'))
-                # print start.date() == now.date()
-                 
-                # end = time.strptime(r['reserve_end'], dformat)
-                # end = datetime.strptime(r['reserve_end'], dformat)
-                # end.replace(tzinfo=pytz.timezone('America/New_York'))
-
-                # if ((now.date() == start.date()) and (now.date() == end.date()) and (now.time() > start.time()) 
-                #   and (now.time() < end.time()) and not(e['free'] == 0)):
-                #   db.execute('UPDATE lounges SET free = ? WHERE building = ? and floor = ?',
-    #                   (0, e["building"], e["floor"]))
-                #   db.commit() 
-                # # figure out logic?
-                # elif not (now.time() > start.time() and now.time() < end.time()) and e['free'] == 0:
-                #   db.execute('UPDATE lounges SET free = ? WHERE building = ? and floor = ?',
-    #                   (2, e["building"], e["floor"]))
-                #   db.commit() 
-
 @app.route('/reservations')
 def reservations():
     db = get_db()
@@ -167,8 +137,6 @@ def reservations():
     harnwell = []
     rodin = []
     for e in entries:
-    	# print e
-    	# print e['id']
     	c = db.execute('SELECT * FROM lounges WHERE id = ? ORDER BY reserve_start', (e['id'],))
     	l = c.fetchone()
     	d = {}
