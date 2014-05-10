@@ -24,8 +24,8 @@ create table reservations (
 );
 
 INSERT INTO reservations (id, reserve_start, reserve_end) VALUES 
-      (1, "03/31/2015 11:00", "03/31/2015 12:00" ),(25, "03/31/2015 11:00", "03/31/2015 12:00" ), 
-      (49, "03/31/2015 11:00", "03/31/2015 12:00" );
+      (1, "03/31/2014 11:00", "03/31/2014 12:00" ),(25, "03/31/2014 11:00", "03/31/2014 12:00" ), 
+      (49, "03/31/2014 11:00", "03/31/2014 12:00" );
 
 INSERT INTO lounges (building, floor, free) VALUES 
       ('Harrison', 1, 2), ('Harrison', 2, 2), ('Harrison', 3, 2), ('Harrison', 4, 2), ('Harrison', 5, 2),

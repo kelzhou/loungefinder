@@ -64,60 +64,101 @@ def close_db(error):
 def main():
 	return render_template('main.html')
 
+def update_helper():
+    dformat = "%m/%d/%Y %H:%M"
+    db = get_db()
+    cur = db.execute('SELECT * FROM lounges ORDER BY floor')
+    entries = cur.fetchall()
+
+    for e in entries:
+        c = db.execute('SELECT * FROM reservations WHERE id = ?', (e['id'],))
+        reservations = c.fetchall()
+        if len(reservations):
+            unchanged = True
+            for r in reservations:
+                # now = datetime.now(pytz.timezone('America/New_York'))
+                now = time.localtime()
+
+                start = time.strptime(r['reserve_start'], dformat)
+                # start = datetime.strptime(r['reserve_start'], dformat)
+                # start.replace(tzinfo=pytz.timezone('America/New_York'))
+
+                end = time.strptime(r['reserve_end'], dformat)
+                # end = datetime.strptime(r['reserve_end'], dformat)
+                # end.replace(tzinfo=pytz.timezone('America/New_York'))
+                
+                # if ((now.date() == start.date()) and (now.date() == end.date()) and (now.time() > start.time()) 
+                #   and (now.time() < end.time())):
+                if now > start and now < end:
+                    if not(e['free'] == 0):
+                        db.execute('UPDATE lounges SET free = ? WHERE building = ? and floor = ?',
+                        (0, e["building"], e["floor"]))
+                        db.commit() 
+                    unchanged = False
+                    return
+
+            if (unchanged):
+                db.execute('UPDATE lounges SET free = ? WHERE building = ? and floor = ?',
+                        (2, e["building"], e["floor"]))
+                db.commit()
+
+    return
+
+
 @app.route('/lounges')
-def show_entries():
-	dformat = "%m/%d/%Y %H:%M"
-	db = get_db()
-	cur = db.execute('SELECT * FROM lounges ORDER BY floor')
-	entries = cur.fetchall()
-	harrison = []
-	harnwell = []
-	rodin = []
+def lounges():
+    db = get_db()
+    harrison = []
+    harnwell = []
+    rodin = []
 
-	# updating based on reservations
-	for e in entries:
-		c = db.execute('SELECT * FROM reservations WHERE id = ?', (e['id'],))
-		reservations = c.fetchall()
-		if len(reservations):
-			for r in reservations:
-				# now = time.localtime()
-				now = datetime.now(pytz.timezone('America/New_York'))
-				# print now
+    update_helper()
 
-				# start = time.strptime(r['reserve_start'], dformat)
-				start = datetime.strptime(r['reserve_start'], dformat)
-				start.replace(tzinfo=pytz.timezone('America/New_York'))
-				# print start.date() == now.date()
-				 
-				# end = time.strptime(r['reserve_end'], dformat)
-				end = datetime.strptime(r['reserve_end'], dformat)
-				end.replace(tzinfo=pytz.timezone('America/New_York'))
-
-				if ((now.date() == start.date()) and (now.date() == end.date()) and (now.time() > start.time()) 
-					and (now.time() < end.time()) and not(e['free'] == 0)):
-					db.execute('UPDATE lounges SET free = ? WHERE building = ? and floor = ?',
-    					(0, e["building"], e["floor"]))
-					db.commit()	
-				# figure out logic?
-				elif not (now.time() > start.time() and now.time() < end.time()) and e['free'] == 0:
-					db.execute('UPDATE lounges SET free = ? WHERE building = ? and floor = ?',
-    					(2, e["building"], e["floor"]))
-					db.commit()	
-
-	for e in entries:
+    time.sleep(1)
+    cur = db.execute('SELECT * FROM lounges ORDER BY floor')
+    entries = cur.fetchall()
+    for e in entries:
 		if e['building'] == "Harrison":
 			harrison.append(e)
 		elif e['building'] == "Harnwell":
 			harnwell.append(e)
 		elif e['building'] == "Rodin":
 			rodin.append(e)
-	return render_template('show_entries.html', entries=entries, lounges=zip(harnwell, harrison, rodin))
+    return render_template('lounges.html', entries=entries, lounges=zip(harnwell, harrison, rodin))
+
+    # updating based on reservations
+    # for e in entries:
+    #   c = db.execute('SELECT * FROM reservations WHERE id = ?', (e['id'],))
+    #   reservations = c.fetchall()
+    #   if len(reservations):
+    #       for r in reservations:
+    #           now = time.localtime()
+                # now = datetime.now(pytz.timezone('America/New_York'))
+                # print now
+
+                # start = time.strptime(r['reserve_start'], dformat)
+                # start = datetime.strptime(r['reserve_start'], dformat)
+                # start.replace(tzinfo=pytz.timezone('America/New_York'))
+                # print start.date() == now.date()
+                 
+                # end = time.strptime(r['reserve_end'], dformat)
+                # end = datetime.strptime(r['reserve_end'], dformat)
+                # end.replace(tzinfo=pytz.timezone('America/New_York'))
+
+                # if ((now.date() == start.date()) and (now.date() == end.date()) and (now.time() > start.time()) 
+                #   and (now.time() < end.time()) and not(e['free'] == 0)):
+                #   db.execute('UPDATE lounges SET free = ? WHERE building = ? and floor = ?',
+    #                   (0, e["building"], e["floor"]))
+                #   db.commit() 
+                # # figure out logic?
+                # elif not (now.time() > start.time() and now.time() < end.time()) and e['free'] == 0:
+                #   db.execute('UPDATE lounges SET free = ? WHERE building = ? and floor = ?',
+    #                   (2, e["building"], e["floor"]))
+                #   db.commit() 
 
 @app.route('/reservations')
 def reservations():
     db = get_db()
-    # t = time.strptime("30 Nov 2011 11 11", "%d %b %Y %H %M")
-    # t = time.strptime("November 11 2011 11 11", "%B %d %Y %H %M")
     dformat = "%m/%d/%Y %H:%M"
 
     cur = db.execute('SELECT * FROM reservations ORDER BY id')
@@ -137,8 +178,6 @@ def reservations():
     	d["id"] = e['id']
     	d["i"] = e['i']
     	if l['building'] == "Harrison":
-    		# s = time.strptime(e['reserve_start'], dformat)
-    		# e = time.strptime(e['reserve_end'], dformat)
     		harrison.append(d)
     	elif l['building'] == "Harnwell":
     		harnwell.append(d)
@@ -149,28 +188,33 @@ def reservations():
 
 @app.route('/add', methods=['POST'])
 def add_entry():
+    if request.form['free'] == "" or request.form['building'] == "" or request.form['floor'] == "":
+    	flash('Invalid data/incomplete, please try again.')
+        return redirect(url_for('lounges'))
+
     db = get_db()
-    # if request.form['free'] == "" or request.form['building'] == "" or request.form['floor'] == "":
-    	# flash('Invalid data, please try again.')
-    # else:
     db.execute('UPDATE lounges SET free = ? WHERE building = ? and floor = ?',
                  (request.form['free'], request.form['building'], request.form['floor']))
     db.commit()
     flash('Lounge was updated, thanks!')
-    return redirect(url_for('show_entries'))
+    return redirect(url_for('lounges'))
 
 @app.route('/addreserve', methods=['POST'])
 def add_reserve():
-	start = request.form['startdate'] + " " + request.form['starttime']
-	end = request.form['enddate'] + " " + request.form['endtime']
-	db = get_db()
-	c = db.execute('SELECT * FROM lounges WHERE building = ? AND floor = ?', (request.form['building'], request.form['floor']))
-	l = c.fetchone()
-	db.execute('INSERT into reservations (id, reserve_start, reserve_end) values (?, ?, ?)',
-		[l['id'], start, end])
-	db.commit()
-	flash('Lounge was reserved, thanks!')
-	return redirect(url_for('reservations'))
+    if request.form['startdate'] == "" or request.form['enddate'] == "" or request.form['building'] == "" or request.form['floor'] == "":
+        flash('Invalid/incomplete data, please try again.')
+        return redirect(url_for('reservations'))
+
+    start = request.form['startdate'] + " " + request.form['starttime']
+    end = request.form['enddate'] + " " + request.form['endtime']
+    db = get_db()
+    c = db.execute('SELECT * FROM lounges WHERE building = ? AND floor = ?', (request.form['building'], request.form['floor']))
+    l = c.fetchone()
+    db.execute('INSERT into reservations (id, reserve_start, reserve_end) values (?, ?, ?)',
+        [l['id'], start, end])
+    db.commit()
+    flash('Lounge was reserved, thanks!')
+    return redirect(url_for('reservations'))
 
 @app.route('/deletereserve', methods=['POST'])
 def delete_reserve():
@@ -179,27 +223,6 @@ def delete_reserve():
 	db.commit()
 	return redirect(url_for('reservations'))
 
-
-
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     error = None
-#     if request.method == 'POST':
-#         if request.form['username'] != app.config['USERNAME']:
-#             error = 'Invalid username'
-#         elif request.form['password'] != app.config['PASSWORD']:
-#             error = 'Invalid password'
-#         else:
-#             session['logged_in'] = True
-#             flash('You were logged in')
-#             return redirect(url_for('show_entries'))
-#     return render_template('login.html', error=error)
-
-# @app.route('/logout')
-# def logout():
-#     session.pop('logged_in', None)
-#     flash('You were logged out')
-#     return redirect(url_for('show_entries'))
 
 if __name__ == '__main__':
     app.run()
