@@ -1,5 +1,4 @@
-Weiran Zhou
-CIS 192 Final Project
+
 Lounge Finder
 
 Run the application: python loungefinder.py
@@ -14,9 +13,6 @@ The page will update the lounge status to "Taken" if there is a reservation at t
 The reservation page show all the reservations of the lounges and there is a form on the side to reserve a lounge.You are also able to delete reservations.
 
 The idea behind the app is that if everyone uses it and updates the lounge status, the application will be very helpful and accurate. No one will have to spend time going from floor to floor to find a place to study or chill. 
-The application is definitely not complete as there are a lot of things that can be added and modified but I spend a lot of time making sure all functionality works and enhancing the user interface.
-
-Thanks! :)
 
 
 
